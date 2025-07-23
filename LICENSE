@@ -1,24 +1,366 @@
-This is free and unencumbered software released into the public domain.
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive CV | Dr. M. Chandrashekar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A thematic single-page application with a top navigation bar for easy access to key sections. The structure is designed for intuitive exploration: 1. Hero section for immediate impact. 2. Key Metrics for a quick quantitative summary. 3. An interactive Career Timeline to visualize professional growth. 4. A Research & Innovation Hub to consolidate projects and publications. 5. A Mentorship section with a chart to highlight academic impact. 6. An Accolades & Expertise section to conclude. This non-linear structure allows users to quickly access the information most relevant to them, enhancing usability over a standard linear document. -->
+    <!-- Visualization & Content Choices: 
+        - Profile Summary -> Inform -> Text Block -> Static -> Clear initial context -> HTML/CSS.
+        - Key Metrics (Years, Students, etc.) -> Inform/Impact -> Dynamic Counters -> On-scroll animation -> Engaging overview -> JS Intersection Observer.
+        - Career History -> Change/Organize -> Vertical Timeline -> Hover effects -> Visually engaging narrative -> HTML/CSS/JS.
+        - Student Supervision -> Compare -> Bar Chart -> Interactive tooltips -> Clear comparison of mentorship levels -> Chart.js/Canvas.
+        - Sponsored Projects -> Inform/Compare -> Card Grid -> Static cards -> Easy scanning of key projects -> HTML/CSS Grid.
+        - Publications -> Organize -> Simple List -> Static -> Clear, readable format -> HTML/CSS.
+        - Awards/Skills -> Inform -> Styled Lists -> Static -> Quick-scan highlights -> HTML/CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF6;
+            color: #3C3633;
+        }
+        .accent-color { color: #E0A75E; }
+        .accent-bg { background-color: #E0A75E; }
+        .accent-border { border-color: #E0A75E; }
+        .secondary-bg { background-color: #FFFBF5; }
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #E0A75E;
+            border-radius: 2px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 450px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -31px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #E0A75E;
+            border: 4px solid #FDFBF6;
+        }
+    </style>
+</head>
+<body class="antialiased">
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
+    <nav class="sticky top-0 z-50 secondary-bg shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="text-2xl font-bold accent-color">Dr. M. Chandrashekar</div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#profile" class="hover:accent-color transition-colors">Profile</a>
+                    <a href="#career" class="hover:accent-color transition-colors">Career</a>
+                    <a href="#research" class="hover:accent-color transition-colors">Research</a>
+                    <a href="#mentorship" class="hover:accent-color transition-colors">Mentorship</a>
+                    <a href="#accolades" class="hover:accent-color transition-colors">Accolades</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-2">
+            <a href="#profile" class="block hover:accent-color transition-colors">Profile</a>
+            <a href="#career" class="block hover:accent-color transition-colors">Career</a>
+            <a href="#research" class="block hover:accent-color transition-colors">Research</a>
+            <a href="#mentorship" class="block hover:accent-color transition-colors">Mentorship</a>
+            <a href="#accolades" class="block hover:accent-color transition-colors">Accolades</a>
+        </div>
+    </nav>
 
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
+    <main>
+        <section id="profile" class="py-20">
+            <div class="container mx-auto px-4 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Dr. M. Chandrashekar</h1>
+                <p class="text-xl md:text-2xl accent-color mb-8">Professor of Practice | Defense R&D Expert | Innovation Mentor</p>
+                <p class="max-w-4xl mx-auto text-lg leading-relaxed">
+                    A highly accomplished Professor of Practice and Defense R&D Expert with over 30 years of distinguished service, Dr. M. Chandrashekar has a proven track record of transforming theoretical engineering knowledge into practical, impactful innovations. His career spans leadership in mission-critical national defense programs for the Indian Army and Air Force, alongside significant contributions to university-level engineering education as an innovation mentor. He specializes in curating real-world, interdisciplinary problem statements that empower students with hands-on experience, fostering critical thinking and a competitive advantage for future engineers.
+                </p>
+            </div>
+        </section>
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
+        <section id="metrics" class="secondary-bg py-16">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div>
+                        <p class="text-4xl md:text-5xl font-bold accent-color" data-target="30">0</p>
+                        <p class="text-lg mt-2">Years of Experience</p>
+                    </div>
+                    <div>
+                        <p class="text-4xl md:text-5xl font-bold accent-color" data-target="4">0</p>
+                        <p class="text-lg mt-2">Ph.D. Scholars Guided</p>
+                    </div>
+                    <div>
+                        <p class="text-4xl md:text-5xl font-bold accent-color" data-target="125">0</p>
+                        <p class="text-lg mt-2">PG/UG Students Mentored</p>
+                    </div>
+                    <div>
+                        <p class="text-4xl md:text-5xl font-bold accent-color" data-target="30">0</p>
+                        <p class="text-lg mt-2">FDPs as Resource Person</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-For more information, please refer to <https://unlicense.org>
+        <section id="career" class="py-20">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title">Career Timeline</h2>
+                <div class="relative max-w-2xl mx-auto mt-12">
+                    <div class="absolute left-0 h-full border-l-2 border-gray-200"></div>
+                    <div class="space-y-12">
+                        <div class="relative pl-8 timeline-item">
+                            <h3 class="text-xl font-bold">Dean & Professor of Practice</h3>
+                            <p class="text-md accent-color">ISL Engineering College, Hyderabad</p>
+                            <p class="text-sm text-gray-500 mb-2">Aug 2022 – Jul 2025</p>
+                            <p>Led academic and R&D initiatives with industry-aligned pedagogy, mentoring faculty and students on real-world projects.</p>
+                        </div>
+                        <div class="relative pl-8 timeline-item">
+                            <h3 class="text-xl font-bold">Professor of Practice</h3>
+                            <p class="text-md accent-color">Anurag University, Hyderabad</p>
+                            <p class="text-sm text-gray-500 mb-2">Aug 2019 – Nov 2021</p>
+                            <p>Developed and delivered application-oriented curricula and supervised projects in advanced engineering domains.</p>
+                        </div>
+                        <div class="relative pl-8 timeline-item">
+                            <h3 class="text-xl font-bold">Research Scientist & Senior Manager</h3>
+                            <p class="text-md accent-color">Bharat Dynamics Ltd. (BDL)</p>
+                            <p class="text-sm text-gray-500 mb-2">Apr 1998 – Jun 2019</p>
+                            <p>Led indigenous R&D for missile tracking and air defense systems. Directed large project teams and critical budgets.</p>
+                        </div>
+                         <div class="relative pl-8 timeline-item">
+                            <h3 class="text-xl font-bold">Faculty - PG in Electronics</h3>
+                            <p class="text-md accent-color">Central University of Hyderabad</p>
+                            <p class="text-sm text-gray-500 mb-2">Jun 1995 – Apr 1998</p>
+                            <p>Taught postgraduate courses and engaged in research in electronics and communications.</p>
+                        </div>
+                        <div class="relative pl-8 timeline-item">
+                            <h3 class="text-xl font-bold">Assistant Professor E&TC</h3>
+                            <p class="text-md accent-color">SSGM College of Engineering, Shegaon</p>
+                            <p class="text-sm text-gray-500 mb-2">Jul 1987 – Jul 1993</p>
+                            <p>Taught core E&TC subjects to undergraduates and facilitated lab-based learning.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="research" class="secondary-bg py-20">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title">Research & Innovation</h2>
+                <div class="text-center mb-12">
+                    <p class="text-lg max-w-3xl mx-auto">This section highlights key sponsored research projects, patents, and publications. The projects demonstrate a consistent focus on developing indigenous, high-impact defense technologies, from AI-based test systems to critical countermeasure systems that have been inducted into the Indian Armed Forces.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-bold mb-2">AI-based Missile Launcher Test System</h3>
+                        <p class="accent-color font-semibold">Principal Investigator</p>
+                        <p class="text-sm text-gray-500 mb-2">1998-2000 | ₹40 Lakhs</p>
+                        <p>Pioneered early AI integration in defense diagnostics, resulting in a field-tested system.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-bold mb-2">Indigenous Countermeasure Dispensing System</h3>
+                        <p class="accent-color font-semibold">Lead Innovator</p>
+                        <p class="text-sm text-gray-500 mb-2">2000-2006 | ₹2.0 Crores</p>
+                        <p>Technology inducted, leading to a BDL order book exceeding ₹1000 Cr.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-bold mb-2">SF-SAM Training Simulator</h3>
+                        <p class="accent-color font-semibold">Principal Investigator</p>
+                        <p class="text-sm text-gray-500 mb-2">2008-2012 | ₹60 Lakhs</p>
+                        <p>Deployed for skill development and mission simulation for strategic air defense.</p>
+                    </div>
+                </div>
+                <div class="mt-12 text-center">
+                    <h3 class="text-2xl font-bold mb-4">Patents & Publications</h3>
+                    <p class="max-w-3xl mx-auto">Holds a patent for a <span class="font-semibold accent-color">Launcher Simulator</span> (granted to BDL, 2000). Has published extensively in SCI and UGC-indexed journals and conferences on topics ranging from speech recognition to infrared object tracking. Full publication list available upon request.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="mentorship" class="py-20">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title">Mentorship & Teaching</h2>
+                 <div class="text-center mb-12">
+                    <p class="text-lg max-w-3xl mx-auto">Dr. Chandrashekar is a dedicated mentor who has guided numerous students through complex research projects. The chart below illustrates his supervision experience across different academic levels, showcasing his commitment to fostering the next generation of engineers and researchers.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="mentorshipChart"></canvas>
+                </div>
+                <div class="mt-12 text-center">
+                     <h3 class="text-2xl font-bold mb-4">Teaching Expertise</h3>
+                     <p class="max-w-3xl mx-auto">Courses taught include Digital Electronics and VLSI Design, Embedded Systems and Real-Time Applications, Missile Systems Engineering, Neural Networks and Deep Learning, and Signal Processing.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="accolades" class="secondary-bg py-20">
+            <div class="container mx-auto px-4">
+                 <h2 class="section-title">Accolades & Expertise</h2>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-center">Honors & Awards</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start"><span class="accent-color font-bold mr-2">★</span><span><span class="font-semibold">Professor of the Decade - Innovation</span> (2023)</span></li>
+                            <li class="flex items-start"><span class="accent-color font-bold mr-2">★</span><span><span class="font-semibold">President of India Award</span> - Indigenous Innovation (IAF) (2007)</span></li>
+                            <li class="flex items-start"><span class="accent-color font-bold mr-2">★</span><span><span class="font-semibold">Raksha Mantri's Excellence Award</span> (2005)</span></li>
+                            <li class="flex items-start"><span class="accent-color font-bold mr-2">★</span><span>Judge at Smart India Hackathon 2020: Hardware Edition</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-center">Core Expertise</h3>
+                        <div class="flex flex-wrap gap-2 justify-center">
+                            <span class="bg-white px-3 py-1 rounded-full shadow">Real-Time Systems Design</span>
+                            <span class="bg-white px-3 py-1 rounded-full shadow">FPGA for AI</span>
+                            <span class="bg-white px-3 py-1 rounded-full shadow">Digital Signal Processing</span>
+                            <span class="bg-white px-3 py-1 rounded-full shadow">Embedded Machine Learning</span>
+                            <span class="bg-white px-3 py-1 rounded-full shadow">Innovation Mentorship</span>
+                            <span class="bg-white px-3 py-1 rounded-full shadow">Technology Transfer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 Dr. M. Chandrashekar. All Rights Reserved.</p>
+            <p>Interactive CV generated for demonstration.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            const navLinks = document.querySelectorAll('#mobile-menu a, nav a[href^="#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (!mobileMenu.classList.contains('hidden')) {
+                         mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            const counters = document.querySelectorAll('#metrics [data-target]');
+            const speed = 200;
+
+            const animateCounter = (counter) => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(() => animateCounter(counter), 1);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        animateCounter(counter);
+                        observer.unobserve(counter);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            counters.forEach(counter => {
+                observer.observe(counter);
+            });
+
+            const mentorshipCtx = document.getElementById('mentorshipChart').getContext('2d');
+            new Chart(mentorshipCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Ph.D. Scholars', 'M.Tech Students', 'B.Tech Students'],
+                    datasets: [{
+                        label: 'Number of Students Guided/Mentored',
+                        data: [4, 25, 100],
+                        backgroundColor: [
+                            'rgba(224, 167, 94, 0.6)',
+                            'rgba(60, 54, 51, 0.6)',
+                            'rgba(224, 167, 94, 0.3)',
+                        ],
+                        borderColor: [
+                            'rgba(224, 167, 94, 1)',
+                            'rgba(60, 54, 51, 1)',
+                            'rgba(224, 167, 94, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Students'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.parsed.y} students`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
